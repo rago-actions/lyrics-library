@@ -1154,7 +1154,7 @@ body[data-theme="light"][data-palette="violet"]   { --accent-text: #6d28d9; --ac
 .spotlight-slide.on { opacity: 1; visibility: visible; }
 .spotlight-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-text); }
 .spotlight-title { font-family: 'Instrument Serif', 'Anek Telugu', serif; font-weight: 400; font-size: clamp(1.5rem, 4vw, 2.2rem); }
-.spotlight-line { color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spotlight-line { flex-shrink: 0; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .spotlight-open { align-self: flex-start; margin-top: 0.4rem; padding: 0.45rem 1.1rem; border-radius: 999px; border: 0;
     background: var(--accent); color: var(--on-accent); font: inherit; font-weight: 500; cursor: pointer; }
 .spotlight-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 36px; height: 36px; border-radius: 50%;
