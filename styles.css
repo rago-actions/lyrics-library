@@ -1019,3 +1019,29 @@ body {
         padding: 1.5rem;
     }
 }
+
+/* Crawlable song list */
+.all-songs-links {
+    margin-top: 3rem;
+    color: var(--ink-muted);
+}
+
+.all-songs-links summary {
+    cursor: pointer;
+}
+
+.all-songs-links ul {
+    columns: 3 220px;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+}
+
+.all-songs-links a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.all-songs-links a:hover {
+    color: var(--accent);
+}

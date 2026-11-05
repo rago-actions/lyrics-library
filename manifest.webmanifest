@@ -1,0 +1,14 @@
+{
+  "name": "Joey Telugu Lyrics Library",
+  "short_name": "Lyrics",
+  "description": "Telugu Christian songs with lyrics and transliteration",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f0e0c",
+  "theme_color": "#c9a227",
+  "lang": "te",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

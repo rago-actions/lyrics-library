@@ -15,152 +15,6 @@ let fontSize = 100; // percentage
 let showTransliteration = true;
 let currentSort = 'a-z';
 
-// Song data - ALL songs including newly added ones
-const songFiles = [
-    "ADONAI ENGLISH",
-    "ADONAI SUROYADAYAMU",
-    "Aaradhana Neeke",
-    "Aaradhana Yesu Neeke",
-    "Aaradhanaku Yogyuda",
-    "Aaradhinchedamu Yesayya Namamunu",
-    "Aaradhinchedamu Yesayya Namamunu v2",
-    "Aaradinchedanu Ninnu Na Yesayya",
-    "Aayaney",
-    "Ae Reethi Nee Runam",
-    "Anni Naamamula Kanna Pai Naamamu",
-    "Anthyakaala abhishekam",
-    "Aradhana Sthuthi Aaradhana",
-    "Aradhana Stuthi Aaradhana",
-    "Asaadhyamainadi Lene Ledu",
-    "Ashirwadam",
-    "Athyunnata Simhasanamu Pai",
-    "Bangaram Adagaledu",
-    "Bhaasillenu Siluvalo",
-    "Bhayamu ledu (YAHWEH )",
-    "Bhayapadanu",
-    "Daveedu Vale Natyamadi",
-    "Deevinchaave Samruddhiga",
-    "Deva Naa Thodai Raava",
-    "Devuni Stutinchudi",
-    "Dhanyawadamutho Sthuthi Padedhanu",
-    "E Tegulu Nee Gudaramu",
-    "Ebinejare Ebinejare",
-    "Emmanuelu Deva",
-    "Enduko Nanninthaga",
-    "Gathakaalamantha",
-    "Geetham Geetham Jaya Jaya Geetham",
-    "Idhigo",
-    "Immanuelu Rakthamu",
-    "Jayam Jayam",
-    "Jeevinchuchunnavada",
-    "Jeevithanthamu",
-    "Junte Thene Kanna",
-    "Kaapari",
-    "Keerthi Hallelujah",
-    "Kuthoohalam Aarbhaatame",
-    "Lekkinchaleni stotramul",
-    "Maa Madhyalo Sancharinchuvaadaa",
-    "Maargamulanu",
-    "Mahima Ghanataku Arhudavu",
-    "Mahima neeke prabhoo",
-    "Mahimaa Neeke Mahimaa",
-    "Mahimaku Paathrudaa",
-    "Mahimaku Pathruda",
-    "Manasaaraa poojinchi ninnaraadhistaa",
-    "Manchivada",
-    "Maargamu choopumu intiki",
-    "Maranamu Nundi",
-    "Naa Balamanthaa Neevenayya",
-    "Naa Jeevam Naa Sarvam",
-    "Naatho maatlaadumayyaa",
-    "Naa Kastamulo",
-    "Naa Neeti Suryudaa",
-    "Naa Prathi Avasaramu vandanam",
-    "Naa Thandri Neeve",
-    "Nadipinchu Naa Naava",
-    "Najareyudaa Naa Yesayya",
-    "Nannu Pilichina Devaa",
-    "Nee Chittamune cheseda",
-    "Nee Karyamulu",
-    "Nee Krupa Leni Kshanamu",
-    "Nee Laga Nannevaru",
-    "Nee Namamulone",
-    "Nee rakthame",
-    "Nee Sannidhilo Santhoshamu",
-    "Neelanti dhaivam",
-    "Neetho Unte Jeevitham",
-    "Neetho unte Jeevitham",
-    "Nethone Nundutaye",
-    "Neeve naa praanamu",
-    "Neeve Neeve",
-    "Neevu Chesina Upakaaramulaku",
-    "Neevu Naa Thodu Unnaavayyaa",
-    "Neevunte Naaku Chalu Yesayya",
-    "Nen Ematharamu",
-    "Ninne ne nammukunnaanu",
-    "Ninne ninne ne kolutunnayyaa",
-    "Ninnu namminavaaru",
-    "Ninu Polina Vaarevaru",
-    "Ninu Stutinchina Chalu",
-    "Oo Prardhana",
-    "Oranna Oranna",
-    "Parama Jeevamu Naaku Nivva",
-    "Paralokame naa svaasthyamu",
-    "Prabhu yesu na rakshaka",
-    "Preetigala Mana Yesu",
-    "Priyuda nee prema",
-    "Raajaa nee sannidhilone",
-    "Raajula Raajaa Prabhuvula Prabhuvaa",
-    "Raja Nee Sannidhi",
-    "Raja Nee Sannidhilo",
-    "Rakshana Durgamu",
-    "Saagipodunu",
-    "Sadaakaalamu neetho nenu",
-    "Sannidhi",
-    "Shuddhudaa ghanudaa rakshakudaa",
-    "Siluva Chaatunaa",
-    "Solipovaladu",
-    "Sthiraparachuvaadavu",
-    "Sthothram Chellinthumu",
-    "Sthothramu Sthuthi Chellinthumu",
-    "Sthuthinchi Aaradhinthumu",
-    "Sundaruda",
-    "sundara naamam",
-    "Thalli la Nannu",
-    "Thallilaa Nannu",
-    "Thana Rakthamtho Kadigi",
-    "Thandri Deva",
-    "Vaagdhaanamu",
-    "Vagdhanamu",
-    "Vandanam Yesayyaa",
-    "Veta Gaani Urilo Nundi",
-    "Yahweh Neeve Naa Daivam",
-    "Yehova Naa Balama",
-    "Yehova Naaku Velugaye",
-    "Yehova needhu melulanu",
-    "Yehovaa Nee Naamamu Entho Balamainadi",
-    "Yehovah Yireh",
-    "Yesayya",
-    "Yesayya Naamamulo",
-    "Yese Dhaivamu",
-    "Yese Naa Parihari",
-    "Yesu Swami Neeku",
-    "Yesu naamam jayam jayam",
-    "Yesu raajaa nee bhavanamulo",
-    "Yudhamu Yehovade",
-    "Yudhdhamu Yehovaade",
-    "adonai suryodayam modalukoni",
-    "bandhinaipoya",
-    "ee jaaveitham",
-    "nee pilupu",
-    "sannidhi sanidhiye",
-    "sermon",
-    "ye baadha ledu ye kashtam",
-    "yeshua",
-    "yhwh",
-    "⁠Sthuthulaku Pathrudu Yesayya"
-];
-
 // Icons for different types
 const icons = {
     sermon: '📖',
@@ -168,6 +22,19 @@ const icons = {
     prayer: '🙏',
     worship: '✨'
 };
+
+// Escape text for safe use in HTML content and attribute values
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Songs merged into another (old filename -> kept filename); from merged.json
+let mergedSongs = {};
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', async () => {
@@ -259,36 +126,39 @@ function createScrollToTop() {
     });
 }
 
-// Load all songs
+// Point favorites/recents saved for merged-away songs at the song they were merged into
+function migrateMergedSongs() {
+    const remap = list => [...new Set(list.map(name => mergedSongs[name] || name))];
+    favorites = new Set(remap([...favorites]));
+    recentlyViewed = remap(recentlyViewed);
+    saveFavorites();
+    saveRecentlyViewed();
+}
+
+// Load all songs (single request; songs.json is generated by scripts/build-songs.mjs)
 async function loadSongs() {
     const loadingSpinner = document.getElementById('loadingSpinner');
-    const cardsContainer = document.getElementById('cardsContainer');
 
     try {
-        allSongs = await Promise.all(
-            songFiles.map(async (filename) => {
-                try {
-                    const content = await loadSongContent(filename);
-                    const displayName = formatDisplayName(filename);
-                    const type = determineType(filename, content);
+        const [response, mergedResponse] = await Promise.all([fetch('songs.json'), fetch('merged.json')]);
+        if (!response.ok) {
+            throw new Error(`Failed to load songs.json (${response.status})`);
+        }
+        const songs = await response.json();
+        if (mergedResponse.ok) {
+            mergedSongs = await mergedResponse.json();
+            migrateMergedSongs();
+        }
 
-                    return {
-                        filename,
-                        displayName,
-                        content,
-                        type,
-                        icon: icons[type],
-                        isFavorite: favorites.has(filename)
-                    };
-                } catch (error) {
-                    console.error(`Error loading ${filename}:`, error);
-                    return null;
-                }
-            })
-        );
-
-        // Filter out null values (failed loads)
-        allSongs = allSongs.filter(song => song !== null);
+        allSongs = songs.map(song => ({
+            filename: song.filename,
+            slug: song.slug,
+            displayName: song.title,
+            content: song.content,
+            type: song.type,
+            icon: icons[song.type],
+            isFavorite: favorites.has(song.filename)
+        }));
         filteredSongs = [...allSongs];
         applySorting();
 
@@ -299,41 +169,6 @@ async function loadSongs() {
         console.error('Error loading songs:', error);
         loadingSpinner.innerHTML = '<p style="color: var(--ink-muted);">Error loading songs. Please refresh the page.</p>';
     }
-}
-
-// Load song content from file
-async function loadSongContent(filename) {
-    const filePath = `All-Songs/${filename}`;
-    const response = await fetch(filePath);
-
-    if (!response.ok) {
-        throw new Error(`Failed to load ${filename}`);
-    }
-
-    return await response.text();
-}
-
-// Format filename for display
-function formatDisplayName(filename) {
-    return filename;
-}
-
-// Determine content type
-function determineType(filename, content) {
-    const lower = filename.toLowerCase();
-    const contentLower = content.toLowerCase();
-
-    if (lower.includes('sermon') || contentLower.includes('romans') || contentLower.includes('prayer:')) {
-        return 'sermon';
-    }
-    if (lower.includes('prayer') || lower.includes('prardhana')) {
-        return 'prayer';
-    }
-    if (lower.includes('aaradhana') || lower.includes('worship') || lower.includes('stuthi')) {
-        return 'worship';
-    }
-
-    return 'song';
 }
 
 // Apply sorting
@@ -374,21 +209,21 @@ function renderCards() {
     noResults.style.display = 'none';
 
     cardsContainer.innerHTML = filteredSongs.map((song, index) => `
-        <div class="card card--${song.type}" data-index="${index}" data-filename="${song.filename}" data-type="${song.type}">
+        <div class="card card--${song.type}" data-index="${index}" data-filename="${escapeHtml(song.filename)}" data-type="${song.type}">
             <div class="card-inner">
                 <div class="card-front">
                     <button class="favorite-btn ${song.isFavorite ? 'active' : ''}"
-                            onclick="toggleFavorite('${song.filename.replace(/'/g, "\\'")}', event)"
+                            onclick="toggleFavorite(this.closest('.card').dataset.filename, event)"
                             aria-label="${song.isFavorite ? 'Remove from favorites' : 'Add to favorites'}"
                             title="${song.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                         ${song.isFavorite ? '★' : '☆'}
                     </button>
                     <span class="card-icon" aria-hidden="true">${song.icon}</span>
-                    <h3 class="card-title">${song.displayName}</h3>
+                    <h3 class="card-title">${escapeHtml(song.displayName)}</h3>
                 </div>
                 <div class="card-back">
                     <div class="card-back-header">
-                        <h3 class="card-back-title">${song.displayName}</h3>
+                        <h3 class="card-back-title">${escapeHtml(song.displayName)}</h3>
                         <div class="card-actions">
                             <button class="icon-btn share-btn" onclick="shareSong(${index})"
                                     aria-label="Share song" title="Share">
@@ -506,14 +341,31 @@ function expandCard(card, filename) {
     window.history.pushState({}, '', url);
 }
 
-// Close expanded card
-function closeExpandedCard() {
+// Open the previous (-1) or next (1) song in the current list
+function navigateCard(delta) {
+    const current = document.querySelector('.card.flipped');
+    if (!current) return;
+
+    const target = document.querySelectorAll('.card')[Number(current.dataset.index) + delta];
+    if (!target) return;
+
+    expandCard(target, target.dataset.filename);
+    target.scrollIntoView({ block: 'center' });
+}
+
+// Hide the expanded card without touching browser history
+function hideExpandedCard() {
     const expandedCard = document.querySelector('.card.flipped');
     if (expandedCard) {
         expandedCard.classList.remove('flipped');
     }
     backdrop.classList.remove('active');
     document.body.style.overflow = '';
+}
+
+// Close expanded card
+function closeExpandedCard() {
+    hideExpandedCard();
 
     // Clear URL parameter
     const url = new URL(window.location);
@@ -524,11 +376,19 @@ function closeExpandedCard() {
 // Check for deep link on load
 function checkDeepLink() {
     const url = new URL(window.location);
+
+    const query = url.searchParams.get('q');
+    if (query) {
+        document.getElementById('searchInput').value = query;
+        document.getElementById('clearSearch').classList.add('visible');
+        filterSongs(query.toLowerCase().trim());
+    }
+
     const songParam = url.searchParams.get('song');
 
     if (songParam) {
-        const filename = decodeURIComponent(songParam);
-        const cardElement = document.querySelector(`[data-filename="${filename}"]`);
+        const filename = mergedSongs[decodeURIComponent(songParam)] || decodeURIComponent(songParam);
+        const cardElement = document.querySelector(`[data-filename="${CSS.escape(filename)}"]`);
         if (cardElement) {
             setTimeout(() => {
                 cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -590,25 +450,24 @@ function updateFontSize() {
 // Share song
 function shareSong(index) {
     const song = filteredSongs[index];
-    const url = new URL(window.location.href);
-    url.searchParams.set('song', encodeURIComponent(song.filename));
-    const shareUrl = url.toString();
+    // Static song page: has its own title/description for link previews
+    const shareUrl = new URL(`songs/${song.slug}.html`, window.location.href).toString();
 
     // Create share modal
     const modal = document.createElement('div');
     modal.className = 'share-modal';
     modal.innerHTML = `
         <div class="share-modal-content">
-            <h3>Share "${song.displayName}"</h3>
+            <h3>Share "${escapeHtml(song.displayName)}"</h3>
             <div class="share-options">
-                <button onclick="copyShareLink('${shareUrl.replace(/'/g, "\\'")}')">
+                <button class="share-copy-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                     </svg>
                     Copy Link
                 </button>
-                <button onclick="shareToWhatsApp('${shareUrl.replace(/'/g, "\\'")}', '${song.displayName.replace(/'/g, "\\'")}')">
+                <button class="share-whatsapp-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
@@ -618,6 +477,9 @@ function shareSong(index) {
             <button class="close-modal-btn" onclick="closeShareModal()">Close</button>
         </div>
     `;
+
+    modal.querySelector('.share-copy-btn').addEventListener('click', () => copyShareLink(shareUrl));
+    modal.querySelector('.share-whatsapp-btn').addEventListener('click', () => shareToWhatsApp(shareUrl, song.displayName));
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeShareModal();
@@ -654,7 +516,7 @@ function printSong(index) {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>${song.displayName}</title>
+            <title>${escapeHtml(song.displayName)}</title>
             <style>
                 body {
                     font-family: 'Anek Telugu', Arial, sans-serif;
@@ -679,8 +541,8 @@ function printSong(index) {
             </style>
         </head>
         <body>
-            <h1>${song.displayName}</h1>
-            <pre>${song.content}</pre>
+            <h1>${escapeHtml(song.displayName)}</h1>
+            <pre>${escapeHtml(song.content)}</pre>
         </body>
         </html>
     `);
@@ -1061,6 +923,14 @@ function initializeKeyboardShortcuts() {
                 decreaseFontSize();
             }
 
+            // Arrow keys: previous/next song
+            if (e.key === 'ArrowRight' && e.target.tagName !== 'INPUT') {
+                navigateCard(1);
+            }
+            if (e.key === 'ArrowLeft' && e.target.tagName !== 'INPUT') {
+                navigateCard(-1);
+            }
+
             // F to toggle favorite
             if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
                 const filename = expandedCard.getAttribute('data-filename');
@@ -1085,6 +955,10 @@ function showHelp() {
                 <div class="shortcut-item">
                     <kbd>Esc</kbd>
                     <span>Close card/modal</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>←</kbd> <kbd>→</kbd>
+                    <span>Previous / next song (when card open)</span>
                 </div>
                 <div class="shortcut-item">
                     <kbd>F</kbd>
@@ -1142,7 +1016,16 @@ function addSwipeGesture(card) {
         }
     }, { passive: true });
 
-    card.addEventListener('touchend', () => {
+    card.addEventListener('touchend', (e) => {
+        if (isDragging && card.classList.contains('flipped')) {
+            const deltaX = e.changedTouches[0].clientX - startX;
+            const deltaY = e.changedTouches[0].clientY - startY;
+
+            // Horizontal swipe: next/previous song
+            if (Math.abs(deltaX) > 80 && Math.abs(deltaY) < 50) {
+                navigateCard(deltaX < 0 ? 1 : -1);
+            }
+        }
         isDragging = false;
     }, { passive: true });
 }
@@ -1165,3 +1048,17 @@ window.filterRecent = filterRecent;
 window.changeSorting = changeSorting;
 window.toggleTheme = toggleTheme;
 window.showHelp = showHelp;
+
+// Browser back/forward: keep the open card in sync with the URL
+window.addEventListener('popstate', () => {
+    if (!new URL(window.location).searchParams.get('song')) {
+        hideExpandedCard();
+    }
+});
+
+// Offline support
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed:', err));
+    });
+}

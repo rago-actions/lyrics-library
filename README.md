@@ -135,8 +135,14 @@ nlag-telugu-lyrics-library/
 ├── index.html          # Main HTML file with SEO meta tags
 ├── styles.css          # Enhanced CSS with dark/light themes
 ├── script.js           # JavaScript with all features
+├── sw.js               # Service worker (offline support)
+├── manifest.webmanifest
+├── songs.json          # Generated: all songs in one file
+├── songs/              # Generated: one static page per song (SEO)
+├── sitemap.xml, robots.txt  # Generated
+├── scripts/build-songs.mjs  # Generator
 ├── README.md           # This file
-└── All-Songs/          # Directory containing song files
+└── All-Songs/          # Source song files
     ├── Song Name 1
     ├── Song Name 2
     └── ...
@@ -158,20 +164,19 @@ nlag-telugu-lyrics-library/
    Telugu transliteration
    ```
 
-4. Add the filename to the `songFiles` array in `script.js`:
-   ```javascript
-   const songFiles = [
-       // ... existing songs
-       "Your New Song Name",
-   ];
-   ```
-
-5. Commit and push:
+4. Commit and push. A GitHub Action (`.github/workflows/build-songs.yml`) runs
+   `node scripts/build-songs.mjs`, which regenerates `songs.json`, the per-song pages in
+   `songs/`, `sitemap.xml`, and the song list in `index.html`. To preview locally, run
+   the script yourself first:
    ```bash
+   node scripts/build-songs.mjs
    git add .
    git commit -m "Add new song: Your Song Name"
    git push
    ```
+
+   Two songs whose names differ only by case or punctuation produce the same URL slug;
+   the build fails with a "Slug collision" error — rename one of them.
 
 ## 🛠️ Technologies Used
 
