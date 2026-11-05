@@ -1102,9 +1102,12 @@ function addSwipeGesture(card) {
     let startY = 0;
     let startX = 0;
     let isDragging = false;
+    let atTop = true;
 
     card.addEventListener('touchstart', (e) => {
         if (card.classList.contains('flipped')) {
+            // Dragging down while the lyrics are scrolled is scrolling, not closing
+            atTop = card.querySelector('.card-back').scrollTop === 0;
             startY = e.touches[0].clientY;
             startX = e.touches[0].clientX;
             isDragging = true;
@@ -1118,7 +1121,7 @@ function addSwipeGesture(card) {
         const deltaX = e.touches[0].clientX - startX;
 
         // Swipe down to close (more than 100px down and not too much horizontal)
-        if (deltaY > 100 && Math.abs(deltaX) < 50) {
+        if (atTop && deltaY > 100 && Math.abs(deltaX) < 50) {
             closeExpandedCard();
             isDragging = false;
         }
