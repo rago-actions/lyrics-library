@@ -1,4 +1,4 @@
-# 🎵 Joey Telugu Lyrics Library
+# Joey Telugu Lyrics Library
 
 A beautiful, feature-rich web application for browsing, searching, and sharing Telugu Christian songs and lyrics.
 

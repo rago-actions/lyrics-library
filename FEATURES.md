@@ -2,7 +2,7 @@
 
 ## 📋 Complete Feature List
 
-### 🎵 Core Functionality
+### Core Functionality
 | Feature | Description | Status |
 |---------|-------------|--------|
 | Song Library | 129 Telugu Christian songs | ✅ |
@@ -105,7 +105,7 @@
 ### New User Journey
 1. 🌐 **Visit site** → See 129 songs
 2. 🔍 **Search** → Find desired song
-3. 🎵 **Click card** → View full lyrics
+3. **Click card** → View full lyrics
 4. ⭐ **Star favorite** → Save for later
 5. 📤 **Share** → Send to friends
 
