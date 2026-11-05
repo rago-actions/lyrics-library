@@ -41,6 +41,7 @@
 |-----|----------|---------|
 | `/` | Focus search | Global |
 | `Esc` | Close modal/card | Global |
+| `P` | Presenter mode (full screen, large lyrics) | Card open |
 | `F` | Toggle favorite | Card open |
 | `Ctrl +` | Increase font | Card open |
 | `Ctrl -` | Decrease font | Card open |

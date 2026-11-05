@@ -250,6 +250,15 @@ function renderCards() {
                                     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                                 </svg>
                             </button>
+                            <button class="icon-btn present-btn" onclick="togglePresenter()"
+                                    aria-label="Presenter mode" title="Presenter mode (P)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <polyline points="9 21 3 21 3 15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                            </button>
                             <button class="icon-btn print-btn" onclick="printSong(${index})"
                                     aria-label="Print lyrics" title="Print">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -392,8 +401,25 @@ function navigateCard(delta) {
     target.scrollIntoView({ block: 'center' });
 }
 
+// Presenter mode: big lyrics, full screen, for projecting or reading from a distance
+function togglePresenter() {
+    const on = document.body.classList.toggle('presenting');
+    if (on) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        }
+    } else if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) document.body.classList.remove('presenting');
+});
+
 // Hide the expanded card without touching browser history
 function hideExpandedCard() {
+    if (document.body.classList.contains('presenting')) togglePresenter();
     const expandedCard = document.querySelector('.card.flipped');
     if (expandedCard) {
         expandedCard.classList.remove('flipped');
@@ -1004,6 +1030,11 @@ function initializeKeyboardShortcuts() {
                 navigateCard(-1);
             }
 
+            // P for presenter mode
+            if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT') {
+                togglePresenter();
+            }
+
             // F to toggle favorite
             if (e.key === 'f' && !e.ctrlKey && !e.metaKey) {
                 const filename = expandedCard.getAttribute('data-filename');
@@ -1032,6 +1063,10 @@ function showHelp() {
                 <div class="shortcut-item">
                     <kbd>←</kbd> <kbd>→</kbd>
                     <span>Previous / next song (when card open)</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>P</kbd>
+                    <span>Presenter mode (full screen, large text)</span>
                 </div>
                 <div class="shortcut-item">
                     <kbd>F</kbd>
@@ -1108,6 +1143,7 @@ window.flipCard = flipCard;
 window.closeExpandedCard = closeExpandedCard;
 window.copyToClipboard = copyToClipboard;
 window.toggleFavorite = toggleFavorite;
+window.togglePresenter = togglePresenter;
 window.shareSong = shareSong;
 window.copyShareLink = copyShareLink;
 window.shareToWhatsApp = shareToWhatsApp;

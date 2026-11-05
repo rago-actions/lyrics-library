@@ -65,6 +65,7 @@ A beautiful, feature-rich web application for browsing, searching, and sharing T
 #### ⌨️ Keyboard Shortcuts
 - **`/`** - Focus search box
 - **`Esc`** - Close opened card or modal
+- **`P`** - Presenter mode: full screen, large lyrics (when card is open)
 - **`F`** - Toggle favorite (when card is open)
 - **`Ctrl +`** - Increase font size
 - **`Ctrl -`** - Decrease font size
@@ -223,6 +224,7 @@ The site works offline-first and can be installed as a Progressive Web App:
 |----------|--------|
 | `/` | Focus search |
 | `Esc` | Close card/modal |
+| `P` | Presenter mode (in card) |
 | `F` | Toggle favorite (in card) |
 | `Ctrl +` | Increase font size |
 | `Ctrl -` | Decrease font size |

@@ -1062,3 +1062,31 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+/* Presenter mode */
+body.presenting .card.flipped {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+body.presenting .card.flipped .card-back {
+    border-radius: 0;
+    overflow-y: auto;
+}
+
+body.presenting .card.flipped .lyrics-controls,
+body.presenting .card.flipped .share-btn,
+body.presenting .card.flipped .print-btn,
+body.presenting .card.flipped .copy-btn {
+    display: none;
+}
+
+body.presenting .card.flipped .card-content {
+    font-size: clamp(1.5rem, 3.2vw, 3rem) !important;
+    line-height: 1.6;
+    max-width: 60rem;
+    margin: 0 auto;
+}
