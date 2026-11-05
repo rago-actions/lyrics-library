@@ -8,6 +8,7 @@
 | Song Library | 129 Telugu Christian songs | ✅ |
 | Search | Real-time fuzzy search | ✅ |
 | Alphabet Filter | A-Z quick navigation | ✅ |
+| Spelling-tolerant search | `yesayya`/`yesayyaa`, `neeto`/`neetho` find the same songs | ✅ |
 | Card Interface | Flip cards with lyrics | ✅ |
 | Responsive | Works on all devices | ✅ |
 
@@ -15,7 +16,7 @@
 | Feature | Description | Persistence | Shortcut |
 |---------|-------------|-------------|----------|
 | Favorites | Bookmark songs | localStorage | `F` (in card) |
-| Theme | Dark/light mode | localStorage | Theme button |
+| Theme | Dark/light mode (defaults to the OS setting) | localStorage | Theme button |
 | Font Size | 50-200% adjustment | localStorage | `Ctrl +/-` |
 | Transliteration | Show/hide English | localStorage | తె/En button |
 | Sorting | A-Z, Z-A | Session | Dropdown |
@@ -69,7 +70,7 @@
 ### ♿ Accessibility
 | Feature | Implementation |
 |---------|----------------|
-| Keyboard Nav | Full keyboard support |
+| Keyboard Nav | Cards are focusable (Enter/Space opens); Tab is trapped inside an open card and focus returns to the card on close |
 | Screen Reader | ARIA labels throughout |
 | Focus Management | Proper focus handling |
 | High Contrast | Compatible with system |

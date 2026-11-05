@@ -1,0 +1,9 @@
+{
+  "name": "joey-telugu-lyrics-library",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-songs.mjs",
+    "test": "node --test test/songs.test.mjs"
+  }
+}

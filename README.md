@@ -178,6 +178,15 @@ nlag-telugu-lyrics-library/
    Two songs whose names differ only by case or punctuation produce the same URL slug;
    the build fails with a "Slug collision" error — rename one of them.
 
+## ✅ Tests
+
+```bash
+npm test   # or: node --test test/songs.test.mjs
+```
+
+Checks that every song builds, slugs are unique, lyrics don't repeat the title, merged songs
+point at a kept song, and the sitemap is complete. CI runs it before regenerating files.
+
 ## 🛠️ Technologies Used
 
 - **HTML5** - Semantic markup with accessibility

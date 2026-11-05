@@ -7,6 +7,7 @@ on:
       - 'All-Songs/**'
       - 'scripts/build-songs.mjs'
       - 'merged.json'
+      - 'test/**'
 
 permissions:
   contents: write
@@ -19,6 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --test test/songs.test.mjs
       - run: node scripts/build-songs.mjs
       - name: Commit songs.json
         run: |

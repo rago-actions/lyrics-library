@@ -35,6 +35,20 @@ function determineType(filename, content) {
     return 'song';
 }
 
+// Drop a leading title line ("Title: X", "[Title]" + next line, or the bare title);
+// the title is already shown as the heading.
+function stripTitle(content, title) {
+    const lines = content.replace(/^\s+/, '').split('\n');
+    const first = lines[0].trim();
+    const compact = t => t.replace(/[^a-z0-9]/gi, '').toLowerCase();
+    let drop = 0;
+    if (/^title:/i.test(first)) drop = 1;
+    else if (/^\[title\]\s*\S/i.test(first)) drop = 1;
+    else if (/^\[title\]$/i.test(first)) drop = 2;
+    else if (compact(first) === compact(title)) drop = 1;
+    return lines.slice(drop).join('\n').replace(/^\s+/, '');
+}
+
 function slugify(title) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
@@ -45,7 +59,7 @@ const songs = readdirSync(dir)
         const content = readFileSync(join(dir, filename), 'utf8');
         const cleaned = filename.replace(invisible, '').trim();
         const title = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-        return { filename, title, slug: slugify(title), type: determineType(filename, content), content };
+        return { filename, title, slug: slugify(title), type: determineType(filename, content), content: stripTitle(content, title) };
     })
     .sort((a, b) => a.title.localeCompare(b.title));
 
@@ -110,7 +124,7 @@ function songPage(song) {
     </main>
     <script>
         // Keep the dark/light preference chosen in the main app
-        try { document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); } catch (e) {}
+        try { document.body.setAttribute('data-theme', localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')); } catch (e) {}
     </script>
 </body>
 </html>

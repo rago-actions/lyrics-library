@@ -14,6 +14,7 @@ let currentTheme = 'dark';
 let fontSize = 100; // percentage
 let showTransliteration = true;
 let currentSort = 'a-z';
+let lastFocused = null; // element to refocus when the open card closes
 
 // Icons for different types
 const icons = {
@@ -50,12 +51,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkDeepLink();
 });
 
+// Collapse common Telugu-to-English spelling variants (aa/a, ee/i, th/t, w/v ...)
+// so "yesayya", "yesayyaa" and "neeto"/"neetho" find the same songs
+function normalizeSearch(text) {
+    return text.toLowerCase()
+        .replace(/[^a-z\u0C00-\u0C7F]/g, '')
+        .replace(/aa+/g, 'a')
+        .replace(/(ee|ii)+/g, 'i')
+        .replace(/(oo|uu)+/g, 'u')
+        .replace(/([tdkgbs])h/g, '$1')
+        .replace(/w/g, 'v');
+}
+
 // Load user preferences from localStorage
 function loadPreferences() {
     try {
         favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
         recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-        currentTheme = localStorage.getItem('theme') || 'dark';
+        currentTheme = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         fontSize = parseInt(localStorage.getItem('fontSize') || '100');
         showTransliteration = localStorage.getItem('showTransliteration') !== 'false';
     } catch (e) {
@@ -156,6 +170,7 @@ async function loadSongs() {
             displayName: song.title,
             content: song.content,
             type: song.type,
+            search: normalizeSearch(`${song.title} ${song.content}`),
             icon: icons[song.type],
             isFavorite: favorites.has(song.filename)
         }));
@@ -209,7 +224,7 @@ function renderCards() {
     noResults.style.display = 'none';
 
     cardsContainer.innerHTML = filteredSongs.map((song, index) => `
-        <div class="card card--${song.type}" data-index="${index}" data-filename="${escapeHtml(song.filename)}" data-type="${song.type}">
+        <div class="card card--${song.type}" role="listitem" tabindex="0" aria-label="${escapeHtml(song.displayName)}" data-index="${index}" data-filename="${escapeHtml(song.filename)}" data-type="${song.type}">
             <div class="card-inner">
                 <div class="card-front">
                     <button class="favorite-btn ${song.isFavorite ? 'active' : ''}"
@@ -284,6 +299,14 @@ function renderCards() {
             }
         });
 
+        // Keyboard: Enter/Space on the focused card opens it
+        card.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target === card && !card.classList.contains('flipped')) {
+                e.preventDefault();
+                expandCard(card, filteredSongs[index].filename);
+            }
+        });
+
         // Add swipe gesture for mobile
         addSwipeGesture(card);
     });
@@ -308,7 +331,18 @@ function toggleFavorite(filename, event) {
         }
     });
 
-    renderCards();
+    // Update the star in place; re-rendering would close an open card
+    const card = [...document.querySelectorAll('.card')].find(c => c.dataset.filename === filename);
+    const btn = card && card.querySelector('.favorite-btn');
+    if (btn) {
+        const isFav = favorites.has(filename);
+        const label = isFav ? 'Remove from favorites' : 'Add to favorites';
+        btn.classList.toggle('active', isFav);
+        btn.textContent = isFav ? '★' : '☆';
+        btn.setAttribute('aria-label', label);
+        btn.title = label;
+    }
+    updateResultsCount();
 }
 
 // Add to recently viewed
@@ -332,6 +366,11 @@ function expandCard(card, filename) {
 
     // Expand this card
     card.classList.add('flipped');
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    lastFocused = document.activeElement;
+    const closeBtn = card.querySelector('.close-btn');
+    if (closeBtn) closeBtn.focus({ preventScroll: true });
     backdrop.classList.add('active');
     document.body.style.overflow = 'hidden';
 
@@ -358,6 +397,12 @@ function hideExpandedCard() {
     const expandedCard = document.querySelector('.card.flipped');
     if (expandedCard) {
         expandedCard.classList.remove('flipped');
+        expandedCard.setAttribute('role', 'listitem');
+        expandedCard.removeAttribute('aria-modal');
+        if (lastFocused && document.contains(lastFocused)) {
+            lastFocused.focus({ preventScroll: true });
+        }
+        lastFocused = null;
     }
     backdrop.classList.remove('active');
     document.body.style.overflow = '';
@@ -791,6 +836,7 @@ function filterSongs(query) {
         }
     } else {
         // Fuzzy search
+        const normalizedQuery = normalizeSearch(query);
         filteredSongs = allSongs.filter(song => {
             const name = song.displayName.toLowerCase();
             const content = song.content.toLowerCase();
@@ -798,6 +844,11 @@ function filterSongs(query) {
 
             // Exact match gets priority
             if (name.includes(query) || content.includes(query) || type.includes(query)) {
+                return true;
+            }
+
+            // Spelling-variant match
+            if (normalizedQuery && song.search.includes(normalizedQuery)) {
                 return true;
             }
 
@@ -899,14 +950,36 @@ function initializeKeyboardShortcuts() {
             if (helpModal) helpModal.remove();
         }
 
+        // Keep Tab inside the open card
+        if (e.key === 'Tab') {
+            const open = document.querySelector('.card.flipped');
+            if (open) {
+                const focusable = [...open.querySelectorAll('button')].filter(b => b.offsetParent !== null);
+                if (focusable.length) {
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    } else if (!e.shiftKey && document.activeElement === last) {
+                        e.preventDefault();
+                        first.focus();
+                    } else if (!open.contains(document.activeElement)) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                }
+            }
+        }
+
         // / for search focus
-        if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+        if (e.key === '/' && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT') {
             e.preventDefault();
             document.getElementById('searchInput').focus();
         }
 
         // ? for help
-        if (e.key === '?') {
+        if (e.key === '?' && e.target.tagName !== 'INPUT') {
             e.preventDefault();
             showHelp();
         }

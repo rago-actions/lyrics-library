@@ -131,7 +131,7 @@ Jeevamune Pondanu...</pre>
     </main>
     <script>
         // Keep the dark/light preference chosen in the main app
-        try { document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); } catch (e) {}
+        try { document.body.setAttribute('data-theme', localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')); } catch (e) {}
     </script>
 </body>
 </html>
