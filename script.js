@@ -8,6 +8,8 @@ let allSongs = [];
 let filteredSongs = [];
 let selectedLetter = null;
 let backdrop = null;
+let pushedEntry = false;      // expandCard added a history entry that close should undo
+let openedByDeepLink = false; // card opened from ?song= on load: the URL already has its entry
 let favorites = new Set();
 let recentlyViewed = [];
 let currentTheme = 'dark';
@@ -367,8 +369,9 @@ function addToRecentlyViewed(filename) {
 
 // Expand card
 function expandCard(card, filename) {
-    // Close any other expanded card
-    closeExpandedCard();
+    // Close any other expanded card (history is handled below)
+    const switching = Boolean(document.querySelector('.card.flipped'));
+    hideExpandedCard();
 
     // Add to recently viewed
     addToRecentlyViewed(filename);
@@ -386,7 +389,13 @@ function expandCard(card, filename) {
     // Update URL with song parameter (for deep linking)
     const url = new URL(window.location);
     url.searchParams.set('song', encodeURIComponent(filename));
-    window.history.pushState({}, '', url);
+    // Moving between songs replaces the entry so Back always returns to the list
+    if (switching || openedByDeepLink) {
+        window.history.replaceState({}, '', url);
+    } else {
+        window.history.pushState({}, '', url);
+        pushedEntry = true;
+    }
 }
 
 // Open the previous (-1) or next (1) song in the current list
@@ -436,12 +445,19 @@ function hideExpandedCard() {
 
 // Close expanded card
 function closeExpandedCard() {
+    const wasOpen = Boolean(document.querySelector('.card.flipped'));
     hideExpandedCard();
+    if (!wasOpen) return;
 
-    // Clear URL parameter
-    const url = new URL(window.location);
-    url.searchParams.delete('song');
-    window.history.pushState({}, '', url);
+    if (pushedEntry) {
+        // Undo the entry expandCard added, so Back doesn't land on a closed song URL
+        pushedEntry = false;
+        window.history.back();
+    } else {
+        const url = new URL(window.location);
+        url.searchParams.delete('song');
+        window.history.replaceState({}, '', url);
+    }
 }
 
 // Check for deep link on load
@@ -463,7 +479,9 @@ function checkDeepLink() {
         if (cardElement) {
             setTimeout(() => {
                 cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                openedByDeepLink = true;
                 expandCard(cardElement, filename);
+                openedByDeepLink = false;
             }, 500);
         }
     }
@@ -1164,6 +1182,7 @@ window.showHelp = showHelp;
 // Browser back/forward: keep the open card in sync with the URL
 window.addEventListener('popstate', () => {
     if (!new URL(window.location).searchParams.get('song')) {
+        pushedEntry = false;
         hideExpandedCard();
     }
 });
