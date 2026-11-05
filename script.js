@@ -285,6 +285,10 @@ function renderCards() {
                                 title="Toggle transliteration">
                             <span class="toggle-label">తె/En</span>
                         </button>
+                        <div class="song-nav">
+                            <button class="icon-btn" onclick="navigateCard(-1)" aria-label="Previous song" title="Previous song (←)">‹</button>
+                            <button class="icon-btn" onclick="navigateCard(1)" aria-label="Next song" title="Next song (→)">›</button>
+                        </div>
                         <div class="font-controls">
                             <button class="icon-btn" onclick="decreaseFontSize()" title="Decrease font size (Ctrl -)">A-</button>
                             <span class="font-size-display">${fontSize}%</span>
@@ -1164,6 +1168,7 @@ window.flipCard = flipCard;
 window.closeExpandedCard = closeExpandedCard;
 window.copyToClipboard = copyToClipboard;
 window.toggleFavorite = toggleFavorite;
+window.navigateCard = navigateCard;
 window.togglePresenter = togglePresenter;
 window.shareSong = shareSong;
 window.copyShareLink = copyShareLink;
