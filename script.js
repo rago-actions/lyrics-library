@@ -13,6 +13,11 @@ let openedByDeepLink = false; // card opened from ?song= on load: the URL alread
 let favorites = new Set();
 let recentlyViewed = [];
 let currentTheme = 'dark';
+let currentPalette = 'gold';
+let spotlightTimer = null;
+let spotlightIndex = 0;
+let spotlightSongs = [];
+const PALETTES = { gold: '#c9a227', sapphire: '#5b9bff', emerald: '#34d399', rose: '#fb7185', violet: '#a78bfa' };
 let fontSize = 100; // percentage
 let showTransliteration = true;
 let currentSort = 'a-z';
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     createAlphabetIndex();
     createToolbarControls();
+    createSpotlight();
     initializeKeyboardShortcuts();
     applyTheme();
     checkDeepLink();
@@ -72,6 +78,7 @@ function loadPreferences() {
         recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
         currentTheme = localStorage.getItem('theme') ||
             (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        currentPalette = localStorage.getItem('palette') in PALETTES ? localStorage.getItem('palette') : 'gold';
         fontSize = parseInt(localStorage.getItem('fontSize') || '100');
         showTransliteration = localStorage.getItem('showTransliteration') !== 'false';
     } catch (e) {
@@ -103,6 +110,95 @@ function saveTransliteration() {
 // Apply theme
 function applyTheme() {
     document.body.setAttribute('data-theme', currentTheme);
+    if (currentPalette === 'gold') document.body.removeAttribute('data-palette');
+    else document.body.setAttribute('data-palette', currentPalette);
+}
+
+function setPalette(name) {
+    currentPalette = name;
+    localStorage.setItem('palette', name);
+    applyTheme();
+    document.querySelectorAll('.swatch').forEach(sw => sw.setAttribute('aria-checked', String(sw.dataset.palette === name)));
+}
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.palette-wrap') && document.getElementById('palettePop')) togglePalettePop(false);
+});
+
+function togglePalettePop(force) {
+    const pop = document.getElementById('palettePop');
+    const btn = document.getElementById('paletteBtn');
+    const open = force === undefined ? pop.hidden : force;
+    pop.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+}
+
+// Auto-rotating featured songs (a different set each day), shown only on the full list
+function createSpotlight() {
+    const el = document.getElementById('spotlight');
+    if (!el || allSongs.length < 5) return;
+    const day = Math.floor(Date.now() / 86400000);
+    const start = (day * 7) % allSongs.length;
+    spotlightSongs = [0, 1, 2, 3, 4].map(i => allSongs[(start + i * 23) % allSongs.length]);
+    el.innerHTML = `
+        <div class="spotlight-track" aria-live="off">
+            ${spotlightSongs.map((song, i) => {
+                const line = song.content.split('\n').map(l => l.trim()).find(l => l && !/^\[.*\]$/.test(l)) || '';
+                return `<div class="spotlight-slide${i === 0 ? ' on' : ''}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${spotlightSongs.length}">
+                    <span class="spotlight-label">Featured today</span>
+                    <h2 class="spotlight-title">${escapeHtml(song.displayName)}</h2>
+                    <p class="spotlight-line">${escapeHtml(line)}</p>
+                    <button class="spotlight-open" data-filename="${escapeHtml(song.filename)}" tabindex="${i === 0 ? 0 : -1}">Open lyrics</button>
+                </div>`;
+            }).join('')}
+            <button class="spotlight-arrow prev" aria-label="Previous featured song">‹</button>
+            <button class="spotlight-arrow next" aria-label="Next featured song">›</button>
+        </div>
+        <div class="spotlight-dots">
+            ${spotlightSongs.map((_, i) => `<button class="spotlight-dot" aria-label="Show featured song ${i + 1}" aria-current="${i === 0}"></button>`).join('')}
+        </div>`;
+    el.querySelector('.prev').addEventListener('click', () => showSpotlight(spotlightIndex - 1));
+    el.querySelector('.next').addEventListener('click', () => showSpotlight(spotlightIndex + 1));
+    el.querySelectorAll('.spotlight-dot').forEach((d, i) => d.addEventListener('click', () => showSpotlight(i)));
+    el.querySelectorAll('.spotlight-open').forEach(b => b.addEventListener('click', () => {
+        const card = [...document.querySelectorAll('.card')].find(c => c.dataset.filename === b.dataset.filename);
+        if (card) expandCard(card, b.dataset.filename);
+    }));
+    ['mouseenter', 'focusin'].forEach(ev => el.addEventListener(ev, stopSpotlight));
+    ['mouseleave', 'focusout'].forEach(ev => el.addEventListener(ev, startSpotlight));
+    document.addEventListener('visibilitychange', () => document.hidden ? stopSpotlight() : startSpotlight());
+    updateSpotlightVisibility();
+}
+
+function showSpotlight(i) {
+    const slides = document.querySelectorAll('.spotlight-slide');
+    spotlightIndex = (i + slides.length) % slides.length;
+    slides.forEach((s, n) => {
+        s.classList.toggle('on', n === spotlightIndex);
+        s.querySelector('.spotlight-open').tabIndex = n === spotlightIndex ? 0 : -1;
+    });
+    document.querySelectorAll('.spotlight-dot').forEach((d, n) => d.setAttribute('aria-current', String(n === spotlightIndex)));
+}
+
+function startSpotlight() {
+    stopSpotlight();
+    const el = document.getElementById('spotlight');
+    if (!el || el.hidden || document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    spotlightTimer = setInterval(() => {
+        if (!document.querySelector('.card.flipped')) showSpotlight(spotlightIndex + 1);
+    }, 5000);
+}
+
+function stopSpotlight() {
+    clearInterval(spotlightTimer);
+    spotlightTimer = null;
+}
+
+function updateSpotlightVisibility() {
+    const el = document.getElementById('spotlight');
+    if (!el || !spotlightSongs.length) return;
+    el.hidden = filteredSongs.length !== allSongs.length;
+    el.hidden ? stopSpotlight() : startSpotlight();
 }
 
 // Toggle theme
@@ -710,7 +806,9 @@ function createToolbarControls() {
     const controlsDiv = document.createElement('div');
     controlsDiv.className = 'toolbar-controls';
     controlsDiv.innerHTML = `
-        <div class="control-group">
+        <div class="control-group" role="group" aria-label="Library menu">
+            <button class="control-btn" id="allBtn" onclick="filterByLetter('all')" title="Show all songs">All</button>
+
             <button class="control-btn" id="favoritesBtn" onclick="filterFavorites()" title="Show favorites">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -730,6 +828,13 @@ function createToolbarControls() {
                 <option value="a-z">A → Z</option>
                 <option value="z-a">Z → A</option>
             </select>
+
+            <span class="palette-wrap">
+                <button class="control-btn" id="paletteBtn" title="Colour palette" aria-label="Colour palette" aria-haspopup="true" aria-expanded="false" onclick="togglePalettePop()"><span class="palette-dot"></span></button>
+                <div class="palette-pop" id="palettePop" role="radiogroup" aria-label="Colour palette" hidden>
+                    ${Object.entries(PALETTES).map(([n, c]) => `<button class="swatch" role="radio" data-palette="${n}" aria-label="${n}" aria-checked="${n === currentPalette}" style="--sw:${c}" onclick="setPalette('${n}')"></button>`).join('')}
+                </div>
+            </span>
 
             <button class="control-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -927,6 +1032,7 @@ function updateResultsCount() {
     const resultsCount = document.getElementById('resultsCount');
     const count = filteredSongs.length;
     const total = allSongs.length;
+    updateSpotlightVisibility();
 
     // Update favorites count
     const favCount = document.getElementById('favCount');
@@ -996,6 +1102,11 @@ function fallbackCopy(text, copyBtn, copyText) {
 function initializeKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
         // Escape to close
+        if (e.key === 'Escape' && !document.getElementById('palettePop')?.hidden) {
+            togglePalettePop(false);
+            document.getElementById('paletteBtn').focus();
+            return;
+        }
         if (e.key === 'Escape') {
             closeExpandedCard();
             closeShareModal();

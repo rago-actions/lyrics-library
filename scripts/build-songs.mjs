@@ -122,7 +122,8 @@ function songPage(song) {
         <pre>${escapeHtml(song.content.trim())}</pre>
     </main>
     <script>
-        // Keep the dark/light preference chosen in the main app
+        // Keep the palette and dark/light preference chosen in the main app
+        try { const p = localStorage.getItem('palette'); if (p) document.body.setAttribute('data-palette', p); } catch (e) {}
         try { document.body.setAttribute('data-theme', localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')); } catch (e) {}
     </script>
 </body>

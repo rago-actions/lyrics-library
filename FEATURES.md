@@ -187,3 +187,8 @@
 
 **Version**: 2.0  
 **Song Count**: 129
+
+## Colour palettes, carousel, menu
+- Five colour palettes (gold, sapphire, emerald, rose, violet) via the dot button in the menu; works with dark/light and is remembered.
+- Auto-rotating "Featured today" carousel (pauses on hover/focus/open card/hidden tab; off with reduced motion; hidden while filtering).
+- Glass pill menu with All / Favorites / Recent, sort, palette, theme, help.

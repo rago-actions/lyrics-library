@@ -27,6 +27,10 @@ A beautiful, feature-rich web application for browsing, searching, and sharing T
 - Theme preference saved automatically
 - Optimized colors for both light and dark environments
 
+#### 🎨 Palettes & Featured Carousel
+- Pick one of five colour palettes (gold, sapphire, emerald, rose, violet) from the menu
+- Auto-rotating "Featured today" carousel of songs on the main list
+
 #### 📤 Share Functionality
 - **Share songs via link** - Copy direct link to any song
 - **WhatsApp sharing** - Send songs directly to WhatsApp

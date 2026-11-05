@@ -68,6 +68,7 @@
 </head>
 
 <body data-theme="dark">
+    <script>try{var p=localStorage.getItem("palette");if(p)document.body.setAttribute("data-palette",p)}catch(e){}</script>
     <div class="page">
         <header class="hero" role="banner">
             <div class="hero-bg" aria-hidden="true"></div>
@@ -78,6 +79,8 @@
         </header>
 
         <main class="main" role="main">
+            <section id="spotlight" class="spotlight" aria-roledescription="carousel" aria-label="Featured songs" hidden></section>
+
             <div class="toolbar" role="search">
                 <div class="search-wrapper">
                     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -261,7 +264,7 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>
