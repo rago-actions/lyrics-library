@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'nod
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BASE_URL = 'https://rago-actions.github.io/nlag-telugu-lyrics-library/';
+const BASE_URL = 'https://rago-actions.github.io/lyrics-library/';
 const SITE_NAME = 'Joey Telugu Lyrics Library';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');

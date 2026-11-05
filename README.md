@@ -2,7 +2,7 @@
 
 Telugu Christian songs with lyrics and English transliteration.
 
-**Live site:** https://rago-actions.github.io/nlag-telugu-lyrics-library/
+**Live site:** https://rago-actions.github.io/lyrics-library/
 
 ## Features
 

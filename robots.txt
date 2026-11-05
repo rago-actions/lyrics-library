@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rago-actions.github.io/nlag-telugu-lyrics-library/sitemap.xml
+Sitemap: https://rago-actions.github.io/lyrics-library/sitemap.xml
