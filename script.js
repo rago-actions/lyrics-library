@@ -23,14 +23,6 @@ let showTransliteration = true;
 let currentSort = 'a-z';
 let lastFocused = null; // element to refocus when the open card closes
 
-// Icons for different types
-const icons = {
-    sermon: '📖',
-    song: '🎵',
-    prayer: '🙏',
-    worship: '✨'
-};
-
 // Escape text for safe use in HTML content and attribute values
 function escapeHtml(text) {
     return String(text)
@@ -269,7 +261,6 @@ async function loadSongs() {
             content: song.content,
             type: song.type,
             search: normalizeSearch(`${song.title} ${song.content}`),
-            icon: icons[song.type],
             isFavorite: favorites.has(song.filename)
         }));
         filteredSongs = [...allSongs];
@@ -331,7 +322,6 @@ function renderCards() {
                             title="${song.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                         ${song.isFavorite ? '★' : '☆'}
                     </button>
-                    <span class="card-icon" aria-hidden="true">${song.icon}</span>
                     <h2 class="card-title">${escapeHtml(song.displayName)}</h2>
                 </div>
                 <div class="card-back">
