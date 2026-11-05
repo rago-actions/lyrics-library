@@ -23,6 +23,8 @@
     --accent: #c9a227;
     --accent-soft: rgba(201, 162, 39, 0.25);
     --accent-strong: #d4af37;
+    --accent-text: #c9a227;   /* gold used as text colour */
+    --on-accent: #1a1816;     /* text on a gold background */
     --border: rgba(255, 255, 255, 0.06);
     --shadow: rgba(0, 0, 0, 0.4);
     --success: #6b8f71;
@@ -46,6 +48,7 @@ body[data-theme="light"] {
     --accent: #c9a227;
     --accent-soft: rgba(201, 162, 39, 0.15);
     --accent-strong: #b8941f;
+    --accent-text: #7a5f06;
     --border: rgba(0, 0, 0, 0.08);
     --shadow: rgba(0, 0, 0, 0.1);
     --success: #4d7c5a;
@@ -100,7 +103,7 @@ body {
 .hero-label {
     font-family: 'Anek Telugu', sans-serif;
     font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--accent);
+    color: var(--accent-text);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
@@ -172,7 +175,7 @@ body {
 
 #searchInput:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: var(--accent-text);
     box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
@@ -185,7 +188,7 @@ body {
     height: 28px;
     border: none;
     background: var(--ink-faint);
-    color: var(--bg);
+    color: var(--on-accent);
     border-radius: 50%;
     font-size: 1.25rem;
     line-height: 1;
@@ -216,7 +219,7 @@ body {
 
 #resultsCount {
     font-weight: 500;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
 /* ----- Toolbar Controls ----- */
@@ -252,14 +255,14 @@ body {
 }
 
 .control-btn:hover {
-    border-color: var(--accent);
+    border-color: var(--accent-text);
     background: var(--accent-soft);
 }
 
 .control-btn.active {
     background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
+    border-color: var(--accent-text);
+    color: var(--on-accent);
 }
 
 .control-btn svg {
@@ -272,7 +275,7 @@ body {
 
 .control-select:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: var(--accent-text);
 }
 
 /* ----- Alphabet index ----- */
@@ -300,15 +303,15 @@ body {
 }
 
 .alphabet-btn:hover:not(.disabled) {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--accent-text);
+    color: var(--accent-text);
     background: var(--accent-soft);
 }
 
 .alphabet-btn.active {
     background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
+    border-color: var(--accent-text);
+    color: var(--on-accent);
 }
 
 .alphabet-btn.disabled {
@@ -475,7 +478,7 @@ body {
     flex-direction: column;
     box-shadow: 0 20px 60px var(--shadow);
     scrollbar-width: thin;
-    scrollbar-color: var(--accent) var(--border);
+    scrollbar-color: var(--accent-text) var(--border);
 }
 
 .card-back::-webkit-scrollbar {
@@ -507,7 +510,7 @@ body {
     font-size: 1.05rem;
     font-weight: 600;
     font-family: 'Anek Telugu', 'Outfit', sans-serif;
-    color: var(--accent);
+    color: var(--accent-text);
     flex: 1;
     min-width: 0;
     word-wrap: break-word;
@@ -549,14 +552,14 @@ body {
 
 .icon-btn:hover {
     background: var(--accent-soft);
-    color: var(--accent);
-    border-color: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent-text);
 }
 
 .copy-btn {
     padding: 0.5rem 0.85rem;
     background: var(--accent);
-    color: var(--bg);
+    color: var(--on-accent);
     gap: 0.4rem;
 }
 
@@ -608,8 +611,8 @@ body {
 
 .transliteration-toggle.active {
     background: var(--accent) !important;
-    color: var(--bg) !important;
-    border-color: var(--accent) !important;
+    color: var(--on-accent) !important;
+    border-color: var(--accent-text) !important;
 }
 
 .toggle-label {
@@ -667,7 +670,7 @@ body {
     height: 48px;
     border-radius: 50%;
     background: var(--accent);
-    color: var(--bg);
+    color: var(--on-accent);
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
@@ -717,7 +720,7 @@ body {
 
 .share-modal-content h3,
 .help-modal-content h2 {
-    color: var(--accent);
+    color: var(--accent-text);
     margin-bottom: 1.5rem;
     font-size: 1.25rem;
 }
@@ -746,14 +749,14 @@ body {
 
 .share-options button:hover {
     background: var(--accent-soft);
-    border-color: var(--accent);
+    border-color: var(--accent-text);
 }
 
 .close-modal-btn {
     width: 100%;
     padding: 0.85rem;
     background: var(--accent);
-    color: var(--bg);
+    color: var(--on-accent);
     border: none;
     border-radius: 10px;
     font-size: 0.95rem;
@@ -789,7 +792,7 @@ body {
     border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--accent-text);
     font-family: 'Outfit', monospace;
     min-width: 32px;
     text-align: center;
@@ -859,7 +862,7 @@ body {
     height: 44px;
     margin: 0 auto 1rem;
     border: 3px solid var(--border);
-    border-top-color: var(--accent);
+    border-top-color: var(--accent-text);
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
 }
@@ -873,7 +876,7 @@ body {
 .site-footer {
     text-align: center;
     padding: 2rem 1.5rem;
-    color: var(--ink-faint);
+    color: var(--ink-muted);
     font-size: 0.9rem;
     border-top: 1px solid var(--border);
 }
@@ -1036,7 +1039,7 @@ body {
 }
 
 .all-songs-links a:hover {
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
 /* Keyboard focus */

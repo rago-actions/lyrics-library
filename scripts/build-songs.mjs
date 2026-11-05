@@ -110,7 +110,7 @@ function songPage(song) {
     <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
     <style>
         .song-page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
-        .song-page a { color: var(--accent); text-decoration: none; }
+        .song-page a { color: var(--accent-text); text-decoration: none; }
         .song-page h1 { margin: 1rem 0 1.5rem; }
         .song-page pre { white-space: pre-wrap; font-family: inherit; line-height: 1.9; font-size: 1.1rem; }
     </style>

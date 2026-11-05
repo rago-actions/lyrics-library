@@ -236,11 +236,11 @@ function renderCards() {
                         ${song.isFavorite ? '★' : '☆'}
                     </button>
                     <span class="card-icon" aria-hidden="true">${song.icon}</span>
-                    <h3 class="card-title">${escapeHtml(song.displayName)}</h3>
+                    <h2 class="card-title">${escapeHtml(song.displayName)}</h2>
                 </div>
                 <div class="card-back">
                     <div class="card-back-header">
-                        <h3 class="card-back-title">${escapeHtml(song.displayName)}</h3>
+                        <h2 class="card-back-title">${escapeHtml(song.displayName)}</h2>
                         <div class="card-actions">
                             <button class="icon-btn share-btn" onclick="shareSong(${index})"
                                     aria-label="Share song" title="Share">
@@ -382,8 +382,11 @@ function expandCard(card, filename) {
 
     // Expand this card
     card.classList.add('flipped');
-    card.setAttribute('role', 'dialog');
-    card.setAttribute('aria-modal', 'true');
+    // The dialog role sits on the back face: a dialog can't be a child of the list
+    const back = card.querySelector('.card-back');
+    back.setAttribute('role', 'dialog');
+    back.setAttribute('aria-modal', 'true');
+    back.setAttribute('aria-label', card.getAttribute('aria-label'));
     lastFocused = document.activeElement;
     const closeBtn = card.querySelector('.close-btn');
     if (closeBtn) closeBtn.focus({ preventScroll: true });
@@ -436,8 +439,10 @@ function hideExpandedCard() {
     const expandedCard = document.querySelector('.card.flipped');
     if (expandedCard) {
         expandedCard.classList.remove('flipped');
-        expandedCard.setAttribute('role', 'listitem');
-        expandedCard.removeAttribute('aria-modal');
+        const back = expandedCard.querySelector('.card-back');
+        back.removeAttribute('role');
+        back.removeAttribute('aria-modal');
+        back.removeAttribute('aria-label');
         if (lastFocused && document.contains(lastFocused)) {
             lastFocused.focus({ preventScroll: true });
         }
@@ -721,7 +726,7 @@ function createToolbarControls() {
                 Recent
             </button>
 
-            <select id="sortSelect" class="control-select" onchange="changeSorting(this.value)">
+            <select id="sortSelect" class="control-select" aria-label="Sort songs" onchange="changeSorting(this.value)">
                 <option value="a-z">A → Z</option>
                 <option value="z-a">Z → A</option>
             </select>
