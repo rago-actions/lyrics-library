@@ -1,6 +1,6 @@
-// Offline support. Same-origin: network first, cache fallback. Google Fonts: cache first.
-const CACHE = 'lyrics-v1';
-const SHELL = ['./', 'index.html', 'styles.css', 'script.js', 'songs.json', 'merged.json', 'icon.svg'];
+// Offline support. Same-origin: network first, cache fallback. Self-hosted fonts: cache first.
+const CACHE = 'lyrics-v2';
+const SHELL = ['./', 'index.html', 'styles.css', 'fonts.css', 'script.js', 'songs.json', 'merged.json', 'icon.svg'];
 
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)));
@@ -20,8 +20,8 @@ self.addEventListener('fetch', event => {
     if (request.method !== 'GET') return;
 
     const url = new URL(request.url);
-    const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
-    if (url.origin !== self.location.origin && !isFont) return;
+    if (url.origin !== self.location.origin) return;
+    const isFont = url.pathname.includes('/fonts/');
 
     event.respondWith(isFont ? cacheFirst(request) : networkFirst(request));
 });

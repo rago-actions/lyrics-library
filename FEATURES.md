@@ -137,7 +137,7 @@
 - ❌ No analytics tracking
 - ❌ No cookies
 - ❌ No user accounts
-- ⚠️ Only external request: Google Fonts (cached by the service worker after first load)
+- ✅ No external requests: fonts are self-hosted (`fonts/`) and cached by the service worker
 - ✅ Only localStorage (local only)
 
 ### Data Storage

@@ -193,7 +193,7 @@ point at a kept song, and the sitemap is complete. CI runs it before regeneratin
 - **CSS3** - Custom properties, Grid, Flexbox, animations
 - **JavaScript (ES6+)** - Modern features, async/await
 - **Web APIs** - localStorage, Clipboard, Fetch, IntersectionObserver
-- **Google Fonts** - Anek Telugu, Instrument Serif, Outfit
+- **Self-hosted fonts** - Anek Telugu, Instrument Serif, Outfit
 
 ## 🌟 Browser Support
 

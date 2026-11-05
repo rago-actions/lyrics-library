@@ -105,9 +105,8 @@ function songPage(song) {
     <meta name="theme-color" content="#c9a227">
     <link rel="manifest" href="../manifest.webmanifest">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="../fonts/anek-telugu-400-telugu.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="../fonts.css">
     <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
     <style>
         .song-page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
