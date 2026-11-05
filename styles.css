@@ -326,9 +326,11 @@ body {
     grid-auto-rows: auto;
     align-items: start;
     gap: 1.25rem;
-    min-height: 100vh; /* keeps the footer from jumping when cards render */
     animation: fadeIn 0.5s ease-out;
 }
+
+/* reserve space until the first render so the footer does not jump */
+.cards-grid:empty { min-height: 100vh; }
 
 /* ----- Card ----- */
 .card {
