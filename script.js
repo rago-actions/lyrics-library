@@ -950,6 +950,15 @@ function setupEventListeners() {
         searchInput.focus();
     });
 
+    // Clicking a "did you mean" suggestion
+    document.getElementById('searchSuggest').addEventListener('click', (e) => {
+        const chip = e.target.closest('[data-suggest]');
+        if (!chip) return;
+        searchInput.value = chip.dataset.suggest;
+        clearBtn.classList.add('visible');
+        filterSongs(chip.dataset.suggest.toLowerCase());
+    });
+
     // Enter key: expand first card
     searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && filteredSongs.length > 0) {
@@ -963,8 +972,83 @@ function setupEventListeners() {
     });
 }
 
-// Filter songs based on search query (with fuzzy matching)
+// Bounded Levenshtein distance: returns max+1 as soon as it must exceed max
+function editDistance(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+        const cur = [i];
+        let rowMin = i;
+        for (let j = 1; j <= b.length; j++) {
+            cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+            if (cur[j] < rowMin) rowMin = cur[j];
+        }
+        if (rowMin > max) return max + 1;
+        prev = cur;
+    }
+    return prev[b.length];
+}
+
+// word (normalized) -> {display form, song indexes}; built on first typo fallback
+let vocab = null;
+function getVocab() {
+    if (vocab) return vocab;
+    vocab = new Map();
+    allSongs.forEach((song, i) => {
+        `${song.displayName} ${song.content}`.split(/[^A-Za-z\u0C00-\u0C7F]+/).forEach(w => {
+            const n = normalizeSearch(w);
+            if (n.length < 3) return;
+            if (!vocab.has(n)) vocab.set(n, { word: w, songs: new Set() });
+            vocab.get(n).songs.add(i);
+        });
+    });
+    return vocab;
+}
+
+// Closest vocabulary words to a (normalized) token, allowing a typo in a partial word too
+function similarWords(token, limit) {
+    const max = token.length <= 4 ? 1 : token.length <= 8 ? 2 : 3;
+    const found = [];
+    for (const [n, entry] of getVocab()) {
+        let d = editDistance(token, n, max);
+        if (token.length >= 4 && n.length > token.length) {
+            d = Math.min(d, editDistance(token, n.slice(0, token.length), max) + 0.5);
+        }
+        if (d <= max) found.push({ d, entry });
+    }
+    found.sort((x, y) => x.d - y.d);
+    return found.slice(0, limit);
+}
+
+// Score a song for a query: title beats lyrics; 0 = no match
+function scoreSong(song, q, nq) {
+    const name = song.displayName.toLowerCase();
+    if (name.startsWith(q)) return 100;
+    if (name.includes(q)) return 90;
+    if (nq && normalizeSearch(name).includes(nq)) return 80;
+    if (song.content.toLowerCase().includes(q)) return 50;
+    if (nq && song.search.includes(nq)) return 40;
+    if (song.type.includes(q)) return 20;
+    return 0;
+}
+
+// Songs containing, for every query word, a similar word (typo tolerant)
+function typoMatches(query) {
+    const tokens = query.split(/\s+/).map(normalizeSearch).filter(t => t.length >= 3);
+    if (!tokens.length) return [];
+    const sets = tokens.map(t => new Set(similarWords(t, 40).flatMap(({ entry }) => [...entry.songs])));
+    return allSongs.filter((_, i) => sets.every(set => set.has(i)));
+}
+
+let searchNote = '';
+
+// Filter songs based on search query: lyrics + titles, Telugu or English, partial words,
+// then a typo-tolerant fallback with "did you mean" suggestions
 function filterSongs(query) {
+    searchNote = '';
+    const suggest = document.getElementById('searchSuggest');
+    if (suggest) suggest.innerHTML = '';
+
     // Reset letter filter when searching
     if (query) {
         selectedLetter = null;
@@ -982,37 +1066,37 @@ function filterSongs(query) {
         } else {
             filteredSongs = [...allSongs];
         }
+        applySorting();
     } else {
-        // Fuzzy search
-        const normalizedQuery = normalizeSearch(query);
-        filteredSongs = allSongs.filter(song => {
-            const name = song.displayName.toLowerCase();
-            const content = song.content.toLowerCase();
-            const type = song.type.toLowerCase();
+        const nq = normalizeSearch(query);
+        filteredSongs = allSongs
+            .map(song => ({ song, score: scoreSong(song, query, nq) }))
+            .filter(r => r.score > 0)
+            .sort((a, b) => b.score - a.score || a.song.displayName.localeCompare(b.song.displayName))
+            .map(r => r.song);
 
-            // Exact match gets priority
-            if (name.includes(query) || content.includes(query) || type.includes(query)) {
-                return true;
+        // Few exact hits: also include songs with similar spellings below them
+        if (filteredSongs.length < 3) {
+            const extras = typoMatches(query).filter(song => !filteredSongs.includes(song));
+            if (extras.length) {
+                filteredSongs = [...filteredSongs, ...extras];
+                searchNote = ' (incl. similar spelling)';
             }
+        }
 
-            // Spelling-variant match
-            if (normalizedQuery && song.search.includes(normalizedQuery)) {
-                return true;
-            }
-
-            // Fuzzy match - check if all query characters appear in order
-            let queryIndex = 0;
-            for (let char of name) {
-                if (char === query[queryIndex]) {
-                    queryIndex++;
-                    if (queryIndex === query.length) return true;
+        if (filteredSongs.length === 0) {
+            if (suggest) {
+                const words = query.split(/\s+/).map(normalizeSearch).filter(t => t.length >= 3)
+                    .flatMap(t => similarWords(t, 3).map(({ entry }) => entry.word));
+                const unique = [...new Set(words.map(w => w.toLowerCase()))].slice(0, 4);
+                if (unique.length) {
+                    suggest.innerHTML = 'Did you mean: ' + unique.map(w =>
+                        `<button type="button" class="suggest-chip" data-suggest="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join(' ') + '?';
                 }
             }
-            return false;
-        });
+        }
     }
 
-    applySorting();
     renderCards();
     updateResultsCount();
 }
@@ -1033,7 +1117,7 @@ function updateResultsCount() {
     if (count === total) {
         resultsCount.textContent = `${total} songs available`;
     } else {
-        resultsCount.textContent = `${count} of ${total} songs`;
+        resultsCount.textContent = `${count} of ${total} songs${searchNote}`;
     }
 }
 

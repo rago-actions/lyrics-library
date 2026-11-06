@@ -829,13 +829,6 @@ body {
     color: var(--ink-muted);
 }
 
-.no-results-icon {
-    font-size: 3rem;
-    opacity: 0.4;
-    display: block;
-    margin-bottom: 1rem;
-}
-
 .no-results h3 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -1160,3 +1153,7 @@ body[data-theme="light"][data-palette="violet"]   { --accent-text: #6d28d9; --ac
 .spotlight-dot[aria-current="true"] { background: var(--accent); width: 22px; border-radius: 6px; }
 @media (max-width: 600px) { .spotlight-slide { padding: 1.5rem 3.2rem; } }
 @media (prefers-reduced-motion: reduce) { .spotlight-slide { transition: none; } }
+
+.suggest-chip { font: inherit; padding: 0.2rem 0.8rem; margin: 0 0.15rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--accent-text); background: var(--accent-soft); color: var(--accent-text); }
+.search-suggest { margin-top: 0.75rem; }

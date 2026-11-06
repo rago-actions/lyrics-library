@@ -1,5 +1,5 @@
 // Offline support. Same-origin: network first, cache fallback. Self-hosted fonts: cache first.
-const CACHE = 'lyrics-v6';
+const CACHE = 'lyrics-v7';
 const SHELL = ['./', 'index.html', 'styles.css', 'fonts.css', 'script.js', 'songs.json', 'merged.json', 'icon.svg'];
 
 self.addEventListener('install', event => {
