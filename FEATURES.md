@@ -1,7 +1,8 @@
 # Features
 
 ## Finding songs
-- Search by title or lyrics; spelling variants match (yesayya / yesayyaa)
+- Search titles and lyrics, in Telugu script or English letters, including partial words; title matches rank first
+- Spelling variants match (yesayya / yesayyaa), small typos still find songs, and "Did you mean" suggestions appear when nothing matches
 - Filter by first letter, favorites, or recently viewed
 - Sort A → Z or Z → A
 
